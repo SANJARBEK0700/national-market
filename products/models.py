@@ -3,6 +3,7 @@ from django.db import models
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
+from decimal import Decimal
 
 class Category(models.Model):
     title = models.CharField(max_length=100, unique=True)
@@ -33,6 +34,13 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title)
+
+        if self.precent > 0:
+            discount_amount = (self.price * Decimal(self.precent)) / Decimal(100)
+            self.discount_price = self.price - discount_amount
+        else:
+            self.discount_price = None
+
         super().save(*args, **kwargs)
 
     def __str__(self):
