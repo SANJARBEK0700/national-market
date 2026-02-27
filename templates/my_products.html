@@ -87,7 +87,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link" href="/">Bosh sahifa</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Barcha mahsulotlar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'products_all' %}">Barcha mahsulotlar</a></li>
                     {% if user.is_staff or user.is_seller %}
                         <li class="nav-item"><a class="nav-link text-primary fw-bold" href="#"><i class="fa-solid fa-box-open me-1"></i> Mening mahsulotlarim</a></li>
                         <li class="nav-item ms-lg-2">

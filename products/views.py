@@ -90,9 +90,8 @@ def product_edit_view(request, pk):
             messages.error(request, "Narx noto'g'ri kiritildi.")
             return render(request, 'product_form.html', {'product': product, 'categories': categories})
 
-        # Modelni yangilash
         product.title = title
-        product.price = price  # Endi bu Decimal tipida
+        product.price = price
         product.discount_price = discount_price
         product.description = description
 
@@ -103,7 +102,6 @@ def product_edit_view(request, pk):
         if main_image:
             product.main_image = main_image
 
-        # Save chaqirilganda models.py dagi matematik amallar xatosiz ishlaydi
         product.save()
 
         messages.success(request, "Mahsulot muvaffaqiyatli yangilandi!")
@@ -121,3 +119,29 @@ def product_delete_view(request, pk):
         return redirect('my_products')
 
     return redirect('my_products')
+
+def products_all_view(request):
+    products = Product.objects.all().order_by('-created_at')
+    query = request.GET.get('search')
+    if query:
+        products = products.filter(
+            Q(title__icontains=query) | Q(description__icontains=query)
+        )
+
+    categories = Category.objects.all()
+
+    wishlist_product_ids = []
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'wishlist'):
+            wishlist_product_ids = request.user.wishlist.products.values_list('id', flat=True)
+        else:
+            wishlist_product_ids = []
+
+    context = {
+        'products': products,
+        'categories': categories,
+        'wishlist_product_ids': wishlist_product_ids,
+        'search_query': query,
+    }
+
+    return render(request, 'products_all.html', context)

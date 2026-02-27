@@ -13,4 +13,4 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'product') # Bir kishi bir marta review yozadi
+        pass
