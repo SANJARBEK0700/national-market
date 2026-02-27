@@ -13,6 +13,7 @@ class User(AbstractUser):
     is_verified = models.BooleanField(default=False)
     otp_code = models.CharField(max_length=6, blank=True, null=True)
 
+
     def generate_otp(self):
         self.otp_code = str(random.randint(100000, 999999))
         self.save()

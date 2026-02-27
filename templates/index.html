@@ -160,7 +160,7 @@
                     </div>
 
                     {% if user.is_authenticated %}
-                        <form action="#" method="post" class="d-inline">
+                        <form action="{% url 'logout' %}" method="post" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-link text-danger p-0 me-3"><i class="fa-solid fa-right-from-bracket fs-5"></i></button>
                         </form>
