@@ -145,3 +145,45 @@ def products_all_view(request):
     }
 
     return render(request, 'products_all.html', context)
+
+
+from decimal import Decimal  # BU YERGA IMPORT QO'SHING
+
+
+def add_product(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+
+        # FLOAT emas, DECIMAL ishlatamiz:
+        try:
+            price = Decimal(request.POST.get('price', '0'))
+            precent = int(request.POST.get('precent', 0))
+            stock = int(request.POST.get('stock', 1))
+        except (ValueError, TypeError, Decimal.InvalidOperation):
+            price = Decimal('0')
+            precent = 0
+            stock = 1
+
+        category_id = request.POST.get('category')
+        main_image = request.FILES.get('main_image')
+        category = get_object_or_404(Category, id=category_id)
+
+        Product.objects.create(
+            title=title,
+            description=description,
+            price=price,
+            precent=precent,
+            stock=stock,
+            main_image=main_image,
+            category=category,
+            seller=request.user,
+        )
+        return redirect('products_all')  # Yoki o'zingiz istagan sahifa
+
+    categories = Category.objects.all()
+    return render(request, 'add_product.html', {'categories': categories})
+

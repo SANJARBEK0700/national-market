@@ -24,6 +24,7 @@ urlpatterns = [
     path('', include('products.urls')),
     path('reviews/', include('reviews.urls', namespace='review')),
     path('', include('users.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 if settings.DEBUG:

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.locale.LocaleMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -60,6 +61,7 @@ ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
+
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / 'templates'],
         "APP_DIRS": True,
@@ -68,6 +70,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+
+                'django.template.context_processors.i18n',
             ],
         },
     },
@@ -109,7 +113,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "uz"
+
+from django.utils.translation import gettext_lazy as _
+
+LANGUAGES = [
+    ('uz', _('O‘zbekcha')),
+    ('ru', _('Русский')),
+    ('en', _('English')),
+]
 
 TIME_ZONE = "UTC"
 
@@ -143,3 +155,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "uzaoff15@gmail.com"
 EMAIL_HOST_PASSWORD = "cirfgazldqckpblj"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+
+USE_I18N = True
+USE_L10N = True
+
+LANGUAGE_COOKIE_NAME = 'django_language'

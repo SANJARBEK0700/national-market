@@ -81,7 +81,7 @@
                     {% if user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link text-primary fw-bold" href="{% url 'my_products' %}"><i class="fa-solid fa-box-open me-1"></i> Mening mahsulotlarim</a></li>
                         <li class="nav-item ms-lg-2">
-                            <a href="#" class="btn btn-success btn-sm rounded-pill px-3 mt-1 shadow-sm fw-bold">
+                            <a href="{% url 'add_product' %}" class="btn btn-success btn-sm rounded-pill px-3 mt-1 shadow-sm fw-bold">
                                 <i class="fa-solid fa-plus me-1"></i> Mahsulot qo'shish
                             </a>
                         </li>

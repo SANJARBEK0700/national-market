@@ -41,7 +41,6 @@ def delete_review(request, review_id):
     return redirect('product_detail', pk=product_id)
 
 
-# 3. Izohni tahrirlash
 def edit_review(request, review_id):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -56,5 +55,4 @@ def edit_review(request, review_id):
         messages.success(request, "Izohingiz yangilandi.")
         return redirect('product_detail', pk=review.product.id)
 
-    # GET so'rovi kelsa (tahrirlash sahifasi bo'lsa), shu sahifaga qaytamiz
     return redirect('product_detail', pk=review.product.id)

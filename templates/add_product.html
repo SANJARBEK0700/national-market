@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yangi mahsulot qo'shish | UNIVERSAL MARKET</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-blue: #0a192f;
+            --accent-blue: #007bff;
+            --light-bg: #f8f9fa;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--light-bg); color: #333; }
+
+        /* Card and Layout */
+        .add-product-wrapper { max-width: 1000px; margin: 60px auto; }
+        .main-card {
+            background: white; border-radius: 24px; border: none;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08); overflow: hidden;
+        }
+
+        /* Form Styling */
+        .form-section-title {
+            font-size: 14px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--accent-blue); margin-bottom: 20px;
+            display: flex; align-items: center;
+        }
+        .form-section-title::after {
+            content: ""; flex: 1; height: 1px; background: #eee; margin-left: 15px;
+        }
+        .form-label { font-weight: 600; font-size: 14px; color: #444; }
+        .form-control, .form-select {
+            padding: 12px 16px; border-radius: 12px; border: 1.5px solid #eee;
+            background-color: #fcfcfc; transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            background-color: #fff; border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+        }
+
+        /* Image Upload Area */
+        .upload-area {
+            border: 2px dashed #d1d5db; border-radius: 16px; padding: 40px 20px;
+            text-align: center; cursor: pointer; transition: 0.3s;
+            background: #f9fafb; position: relative;
+        }
+        .upload-area:hover { border-color: var(--accent-blue); background: #f0f7ff; }
+        .preview-img {
+            max-width: 100%; max-height: 300px; border-radius: 12px;
+            display: none; margin-top: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Buttons */
+        .btn-publish {
+            background: var(--dark-blue); color: white; border: none;
+            padding: 14px 40px; border-radius: 12px; font-weight: 700;
+            transition: 0.3s; width: 100%;
+        }
+        .btn-publish:hover { background: var(--accent-blue); transform: translateY(-2px); }
+
+        /* Pricing Badge */
+        .info-card {
+            background: #eef2ff; border-radius: 12px; padding: 20px;
+            border-left: 4px solid var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="add-product-wrapper">
+            <div class="text-center mb-5">
+                <a href="/" class="text-decoration-none mb-3 d-inline-block">
+                    <h3 class="fw-bold text-dark"><i class="fa-solid fa-shuttle-space text-primary me-2"></i>UNIVERSAL<span class="text-primary">MARKET</span></h3>
+                </a>
+                <h1 class="fw-black">Yangi mahsulot yaratish</h1>
+                <p class="text-muted">Mahsulotingizni dunyoga ko'rsating va sotuvni hoziroq boshlang.</p>
+            </div>
+
+            <div class="main-card">
+                <form action="{% url 'add_product' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row g-0">
+                        <div class="col-lg-7 p-4 p-md-5">
+                            <div class="form-section-title">Asosiy ma'lumotlar</div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Mahsulot nomi</label>
+                                <input type="text" name="title" class="form-control" placeholder="Masalan: iPhone 15 Pro Max" required>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Kategoriya</label>
+                                    <select name="category" class="form-select" required>
+                                        <option value="" selected disabled>Tanlang</option>
+                                        {% for cat in categories %}
+                                            <option value="{{ cat.id }}">{{ cat.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Ombordagi soni (Stock)</label>
+                                    <input type="number" name="stock" class="form-control" value="1" min="1">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Tavsif (Description)</label>
+                                <textarea name="description" class="form-control" rows="5" placeholder="Mahsulotning holati, kafolati va xususiyatlari..." required></textarea>
+                            </div>
+
+                            <div class="form-section-title mt-5">Narx va Chegirma</div>
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Asosiy narx ($)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white border-end-0 text-muted">$</span>
+                                        <input type="number" name="price" step="0.01" class="form-control border-start-0" placeholder="0.00" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Chegirma foizi (%)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white border-end-0 text-muted">%</span>
+                                        <input type="number" name="precent" class="form-control border-start-0" placeholder="0" min="0" max="100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5 bg-light p-4 p-md-5 border-start">
+                            <div class="form-section-title">Mahsulot rasmi</div>
+
+                            <div class="upload-area mb-4" id="drop-zone" onclick="document.getElementById('image-input').click()">
+                                <div id="upload-placeholder">
+                                    <i class="fa-solid fa-cloud-arrow-up fs-1 text-primary mb-3"></i>
+                                    <h6 class="fw-bold mb-1">Rasm yuklash</h6>
+                                    <p class="text-muted small">Bosing yoki rasmni shu yerga tashlang</p>
+                                </div>
+                                <img id="image-preview" src="#" class="preview-img img-fluid">
+                                <input type="file" name="main_image" id="image-input" class="d-none" accept="image/*" required onchange="previewFile()">
+                            </div>
+
+                            <div class="info-card mb-4">
+                                <h6 class="fw-bold small mb-2"><i class="fa-solid fa-lightbulb me-2"></i>Muhim eslatma:</h6>
+                                <p class="small text-muted mb-0">
+                                    Siz kiritgan <b>Chegirma foizi</b> asosida tizim <b>Discount Price</b>-ni avtomatik hisoblaydi. Agar foiz kiritmasangiz, mahsulot to'liq narxda sotiladi.
+                                </p>
+                            </div>
+
+                            <div class="mt-5">
+                                <button type="submit" class="btn btn-publish btn-lg mb-3">
+                                    <i class="fa-solid fa-rocket me-2"></i> Nashr etish
+                                </button>
+                                <a href="/" class="btn btn-outline-secondary w-100 rounded-12 py-2 fw-bold">Bekor qilish</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function previewFile() {
+            const preview = document.getElementById('image-preview');
+            const placeholder = document.getElementById('upload-placeholder');
+            const file = document.getElementById('image-input').files[0];
+            const reader = new FileReader();
+
+            reader.addEventListener("load", function () {
+                preview.src = reader.result;
+                preview.style.display = "block";
+                placeholder.style.display = "none";
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
