@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Profil{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-6">
+
+<div class="auth-card text-center">
+
+<img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://via.placeholder.com/120{% endif %}"
+class="rounded-circle mb-3"
+width="120" height="120">
+
+<h4 class="fw-bold">{{ user.username }}</h4>
+<p class="text-muted">{{ user.email }}</p>
+
+<p>
+<span class="badge bg-primary">
+{% if user.is_seller %}Seller{% else %}Buyer{% endif %}
+</span>
+</p>
+
+<a href="{% url 'profile_edit' %}" class="btn btn-main mt-3">
+Profilni tahrirlash
+</a>
+
+</div>
+</div>
+</div>
+{% endblock %}

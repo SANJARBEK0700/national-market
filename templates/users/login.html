@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Kirish{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+<div class="col-lg-5">
+
+<div class="auth-card">
+
+<h3 class="fw-bold text-center mb-4">Tizimga kirish</h3>
+
+<form method="post">
+{% csrf_token %}
+
+<div class="mb-3">
+<label>Username</label>
+<input type="text" name="username" class="form-control" required>
+</div>
+
+<div class="mb-3">
+<label>Password</label>
+<input type="password" name="password" class="form-control" required>
+</div>
+
+<button class="btn btn-main w-100" type="submit">Kirish</button>
+
+<p class="text-center mt-3">
+Hisob yo‘qmi?
+<a href="{% url 'register' %}">Ro'yxatdan o'tish</a>
+</p>
+
+</form>
+
+</div>
+</div>
+</div>
+{% endblock %}
