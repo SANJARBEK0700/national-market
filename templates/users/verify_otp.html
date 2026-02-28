@@ -1,31 +1,125 @@
 {% extends "base.html" %}
+{% block title %}Email tasdiqlash | UNIVERSAL MARKET{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-<div class="col-lg-5">
+<style>
+    .otp-card {
+        border: none;
+        box-shadow: 0 20px 60px rgba(10, 25, 47, 0.08);
+        border-radius: 20px;
+        background: #fff;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    .otp-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--accent-blue), var(--dark-blue));
+    }
+    .otp-input {
+        letter-spacing: 15px;
+        font-weight: 900;
+        border: 2px solid #eee;
+        border-radius: 12px;
+        background: var(--light-bg);
+        color: var(--dark-blue);
+        transition: 0.3s;
+        padding: 15px !important;
+    }
+    .otp-input:focus {
+        border-color: var(--accent-blue);
+        background: #fff;
+        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+        outline: none;
+    }
+    .otp-icon {
+        width: 70px;
+        height: 70px;
+        background: #eef2ff;
+        color: var(--accent-blue);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin-bottom: 25px;
+    }
+    .resend-link {
+        color: var(--accent-blue);
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+    .resend-link:hover {
+        text-decoration: underline;
+    }
+    .timer-text {
+        font-size: 0.85rem;
+        color: #999;
+    }
+</style>
 
-<div class="auth-card text-center">
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-lg-5 col-md-7">
+        <div class="otp-card text-center">
 
-<h3 class="fw-bold mb-3">Email tasdiqlash</h3>
+            <div class="otp-icon">
+                <i class="fa-solid fa-envelope-open-text fs-2"></i>
+            </div>
 
-<p class="text-muted">Emailingizga yuborilgan kodni kiriting</p>
+            <h3 class="fw-bold mb-2 text-dark">Emailni tasdiqlang</h3>
+            <p class="text-muted small mb-4 px-3">
+                Biz sizning emailingizga 6 xonali tasdiqlash kodini yubordik. Iltimos, uni quyidagi maydonga kiriting.
+            </p>
 
-<form method="post">
-{% csrf_token %}
+            <form method="post">
+                {% csrf_token %}
 
-<input type="text"
-       name="otp"
-       class="form-control text-center fs-4 mb-3"
-       placeholder="------"
-       maxlength="6">
+                <div class="mb-4">
+                    <input type="text"
+                           name="otp"
+                           class="form-control otp-input text-center fs-2"
+                           placeholder="000000"
+                           maxlength="6"
+                           pattern="\d{6}"
+                           autocomplete="one-time-code"
+                           inputmode="numeric"
+                           required
+                           autofocus>
+                </div>
 
-<button class="btn btn-main w-100">
-Tasdiqlash
-</button>
+                <button class="btn btn-main w-100 py-3 shadow-sm mb-4">
+                    Tasdiqlash va Davom etish <i class="fa-solid fa-circle-check ms-2"></i>
+                </button>
 
-</form>
+                <div class="divider mb-4" style="height: 1px; background: #eee;"></div>
 
+                <div class="d-flex flex-column align-items-center">
+                    <p class="timer-text mb-1">Kod kelmadimi?</p>
+                    <a href="#" class="resend-link">
+                        <i class="fa-solid fa-rotate-right me-1"></i> Kodni qayta yuborish
+                    </a>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'login' %}" class="text-muted text-decoration-none small">
+                <i class="fa-solid fa-chevron-left me-1"></i> Kirish sahifasiga qaytish
+            </a>
+        </div>
+    </div>
 </div>
-</div>
-</div>
+
+<script>
+    // Faqat raqamlarni kiritishga ruxsat berish
+    document.querySelector('input[name="otp"]').addEventListener('input', function (e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+</script>
 {% endblock %}

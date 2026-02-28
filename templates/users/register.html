@@ -1,67 +1,140 @@
 {% extends "base.html" %}
-{% block title %}Ro'yxatdan o'tish{% endblock %}
+{% block title %}Profilni tahrirlash | UNIVERSAL MARKET{% endblock %}
 
 {% block content %}
+<style>
+    .edit-card {
+        border: none;
+        box-shadow: 0 20px 60px rgba(10, 25, 47, 0.08);
+        border-radius: 20px;
+        background: #fff;
+        padding: 40px;
+    }
+    .edit-title {
+        font-weight: 900;
+        color: var(--dark-blue);
+        margin-bottom: 10px;
+    }
+    .edit-subtitle {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 30px;
+    }
+    /* Django formalarini chiroyli qilish uchun */
+    form p {
+        margin-bottom: 20px;
+    }
+    form label {
+        display: block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--dark-blue);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    form input[type="text"],
+    form input[type="email"],
+    form input[type="password"],
+    form input[type="number"],
+    form textarea,
+    form select {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 10px;
+        border: 1.5px solid #eee;
+        transition: 0.3s;
+        outline: none;
+    }
+    form input:focus, form textarea:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+    }
+    /* Rasm yuklash inputi uchun maxsus stil */
+    form input[type="file"] {
+        background: var(--light-bg);
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px dashed #ccc;
+        width: 100%;
+        cursor: pointer;
+    }
+    .helptext {
+        display: block;
+        font-size: 0.75rem;
+        color: #999;
+        margin-top: 5px;
+    }
+    .btn-save {
+        background: var(--dark-blue);
+        color: #fff;
+        border-radius: 10px;
+        padding: 14px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: 0.3s;
+        border: none;
+        width: 100%;
+        margin-top: 20px;
+    }
+    .btn-save:hover {
+        background: var(--accent-blue);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    }
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: #6c757d;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: 0.3s;
+    }
+    .back-link:hover {
+        color: var(--dark-blue);
+    }
+</style>
+
 <div class="row justify-content-center">
-<div class="col-lg-6">
+    <div class="col-lg-6 col-md-8">
+        <div class="edit-card">
+            <div class="text-center">
+                <div class="bg-light text-primary d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 60px; height: 60px;">
+                    <i class="fa-solid fa-user-gear fs-4"></i>
+                </div>
+                <h2 class="edit-title">Ro'yhatdan o'tish</h2>
+                <p class="edit-subtitle">Ma'lumotlaringizni kiriting va ro'yhatdan o'tish tugmasini bosing!</p>
+            </div>
 
-<div class="auth-card">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
 
-<h3 class="fw-bold text-center mb-4">Hisob yaratish</h3>
+                <div class="form-body">
+                    {# Django'ning {{ form.as_p }} qismini chiroyli chiqarish #}
+                    {{ form.as_p }}
+                </div>
 
-<form method="POST" action="{% url 'register' %}">
-{% csrf_token %}
-{{ form.errors }}
-{{ form.non_field_errors }}
+                <button class="btn-save" type="submit">
+                    <i class="fa-solid fa-check-double me-2"></i> Ro'yhatdan o'tish
+                </button>
+            </form>
 
-<div class="mb-3">
-<label class="form-label">Username</label>
-{{ form.username }}
-<div class="text-danger small">
-    {{ form.username.errors }}
-</div>
-</div>
-
-
-
-<div class="mb-3">
-<label class="form-label">Email</label>
-{{ form.email }}
-<div class="text-danger small">
-    {{ form.email.errors }}
-</div>
-</div>
-
-
-<div class="mb-3">
-<label class="form-label">Password</label>
-{{ form.password1 }}
-<div class="text-danger small">
-    {{ form.password1.errors }}
-</div>
+            <div class="text-center">
+                <a href="{% url 'profile' %}" class="back-link">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Bekor qilish va qaytish
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-<div class="mb-3">
-<label class="form-label">Password confirm</label>
-{{ form.password2 }}
-<div class="text-danger small">
-    {{ form.password2.errors }}
-</div>
-</div>
-
-<button class="btn btn-main w-100" type="submit">
-Ro'yxatdan o'tish
-</button>
-
-<p class="text-center mt-3">
-Allaqachon account bormi?
-<a href="{% url 'login' %}">Kirish</a>
-</p>
-
-</form>
-
-</div>
-</div>
-</div>
+<script>
+    // Django avtomatik generatsiya qiladigan inputlarga bootstrap va custom klasslarni qo'shish
+    document.querySelectorAll('input, select, textarea').forEach(el => {
+        if (el.type !== 'checkbox' && el.type !== 'radio' && el.type !== 'file') {
+            el.classList.add('form-control-custom');
+        }
+    });
+</script>
 {% endblock %}

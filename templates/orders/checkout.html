@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Checkout</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Buyurtma berish</button>
+</form>
+</body>
+</html>{% extends "base.html" %}
+{% block title %}Buyurtmani rasmiylashtirish | UNIVERSAL MARKET{% endblock %}
+
+{% block content %}
+<style>
+    .checkout-card {
+        border: none;
+        box-shadow: 0 20px 60px rgba(10, 25, 47, 0.08);
+        border-radius: 20px;
+        background: #fff;
+        padding: 40px;
+        border: 1px solid #f0f0f0;
+    }
+    .checkout-title {
+        font-weight: 900;
+        color: var(--dark-blue);
+        letter-spacing: -0.5px;
+        margin-bottom: 30px;
+    }
+    .order-summary {
+        background: var(--light-bg);
+        border-radius: 15px;
+        padding: 25px;
+        border: 1px solid #eee;
+    }
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+    }
+    .summary-total {
+        border-top: 2px dashed #ccc;
+        margin-top: 15px;
+        padding-top: 15px;
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--accent-blue);
+    }
+    /* Django form styling */
+    form p {
+        margin-bottom: 20px;
+    }
+    form label {
+        display: block;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--dark-blue);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    form input, form textarea, form select {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 10px;
+        border: 1.5px solid #eee;
+        transition: 0.3s;
+    }
+    form input:focus, form textarea:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+        outline: none;
+    }
+    .btn-checkout {
+        background: var(--dark-blue);
+        color: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        font-weight: 800;
+        font-size: 1.1rem;
+        transition: 0.3s;
+        border: none;
+        width: 100%;
+        margin-top: 20px;
+        box-shadow: 0 10px 20px rgba(10, 25, 47, 0.15);
+    }
+    .btn-checkout:hover {
+        background: var(--accent-blue);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 123, 255, 0.25);
+    }
+    .steps-indicator {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 40px;
+    }
+    .step {
+        display: flex;
+        align-items: center;
+        color: #ccc;
+    }
+    .step.active { color: var(--accent-blue); }
+    .step-num {
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        border: 2px solid currentColor;
+        display: flex; align-items: center; justify-content: center;
+        margin-right: 10px; font-weight: 700;
+    }
+    .step-line {
+        width: 50px; height: 2px;
+        background: #eee; margin: 0 15px;
+    }
+</style>
+
+<div class="row">
+    <!-- Chap tomon: Form -->
+    <div class="col-lg-7 mb-4">
+        <div class="checkout-card h-100">
+            <div class="steps-indicator d-none d-md-flex">
+                <div class="step"><div class="step-num"><i class="fa-solid fa-check"></i></div> Savatcha</div>
+                <div class="step-line"></div>
+                <div class="step active"><div class="step-num">2</div> Yetkazib berish</div>
+                <div class="step-line"></div>
+                <div class="step"><div class="step-num">3</div> Yakunlash</div>
+            </div>
+
+            <h2 class="checkout-title"><i class="fa-solid fa-truck-fast me-2 text-primary"></i> Buyurtma ma'lumotlari</h2>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="checkout-form-body">
+                    {{ form.as_p }}
+                </div>
+
+                <div class="alert alert-info border-0 rounded-4 p-3 mt-4">
+                    <div class="d-flex">
+                        <i class="fa-solid fa-circle-info fs-4 me-3 mt-1"></i>
+                        <small>Buyurtmangiz tasdiqlangandan so'ng operatorimiz 15 daqiqa ichida siz bilan bog'lanadi.</small>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-checkout">
+                    Buyurtmani tasdiqlash <i class="fa-solid fa-paper-plane ms-2"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- O'ng tomon: Savatcha xulosasi -->
+    <div class="col-lg-5">
+        <div class="order-summary sticky-top" style="top: 100px;">
+            <h5 class="fw-bold mb-4 border-bottom pb-2">Buyurtma xulosasi</h5>
+
+            <div class="cart-preview-list mb-4">
+                {% for item in cart_items %}
+                <div class="d-flex align-items-center mb-3">
+                    <img src="{{ item.product.main_image.url }}" class="rounded-3 border" style="width: 50px; height: 50px; object-fit: cover; margin-right: 15px;">
+                    <div class="flex-grow-1">
+                        <h6 class="mb-0 small fw-bold">{{ item.product.title }}</h6>
+                        <small class="text-muted">{{ item.quantity }} dona x ${{ item.product.price }}</small>
+                    </div>
+                    <span class="fw-bold small">${{ item.get_total_price }}</span>
+                </div>
+                {% empty %}
+                <p class="text-center text-muted small py-3">Savatchada mahsulotlar topilmadi.</p>
+                {% endfor %}
+            </div>
+
+            <div class="summary-details">
+                <div class="summary-item">
+                    <span class="text-muted">Mahsulotlar narxi:</span>
+                    <span>${{ total_cart_price }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="text-muted">Yetkazib berish:</span>
+                    <span class="text-success fw-bold">Bepul</span>
+                </div>
+                <div class="summary-item">
+                    <span class="text-muted">Chegirma:</span>
+                    <span>-$0.00</span>
+                </div>
+                <div class="summary-total">
+                    <span>Jami summa:</span>
+                    <span>${{ total_cart_price }}</span>
+                </div>
+            </div>
+
+            <div class="mt-4 p-3 bg-white rounded-3 border border-warning">
+                <div class="d-flex align-items-center text-warning">
+                    <i class="fa-solid fa-shield-halved fs-4 me-2"></i>
+                    <span class="small fw-bold">Xavfsiz to'lov kafolati</span>
+                </div>
+                <p class="mb-0 mt-2 text-muted" style="font-size: 0.75rem;">Sizning barcha ma'lumotlaringiz shifrlangan holda himoyalanadi.</p>
+            </div>
+
+            <a href="/" class="d-block text-center mt-4 text-muted text-decoration-none small">
+                <i class="fa-solid fa-chevron-left me-1"></i> Xarid qilishda davom etish
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

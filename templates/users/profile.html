@@ -1,30 +1,161 @@
 {% extends "base.html" %}
-{% block title %}Profil{% endblock %}
+{% block title %}Profil | UNIVERSAL MARKET{% endblock %}
 
 {% block content %}
+<style>
+    .profile-card {
+        border: none;
+        box-shadow: 0 20px 60px rgba(10, 25, 47, 0.08);
+        border-radius: 20px;
+        overflow: hidden;
+        background: #fff;
+    }
+    .profile-header {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, var(--accent-blue) 100%);
+        height: 120px;
+        position: relative;
+    }
+    .profile-avatar-wrapper {
+        position: relative;
+        margin-top: -60px;
+        margin-bottom: 20px;
+    }
+    .profile-img {
+        width: 130px;
+        height: 130px;
+        object-fit: cover;
+        border: 5px solid #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        background: #fff;
+    }
+    .profile-name {
+        font-weight: 800;
+        color: var(--dark-blue);
+        margin-bottom: 5px;
+    }
+    .profile-email {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+    .role-badge {
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin: 30px 0;
+        text-align: left;
+    }
+    .info-item {
+        background: var(--light-bg);
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid #eee;
+    }
+    .info-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #888;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+    .info-value {
+        font-weight: 700;
+        color: var(--dark-blue);
+    }
+    .btn-edit {
+        background: var(--dark-blue);
+        color: #fff;
+        border-radius: 10px;
+        padding: 12px 30px;
+        font-weight: 700;
+        transition: 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-edit:hover {
+        background: var(--accent-blue);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+    }
+</style>
+
 <div class="row justify-content-center">
-<div class="col-lg-6">
+    <div class="col-lg-6 col-md-8">
+        <div class="profile-card">
+            <!-- Header Background -->
+            <div class="profile-header"></div>
 
-<div class="auth-card text-center">
+            <div class="p-4 p-md-5 text-center">
+                <!-- Avatar -->
+                <div class="profile-avatar-wrapper">
+                    <img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://ui-avatars.com/api/?name={{ user.username }}&background=007bff&color=fff&size=128{% endif %}"
+                         class="rounded-circle profile-img"
+                         alt="User Avatar">
+                </div>
 
-<img src="{% if user.profile_image %}{{ user.profile_image.url }}{% else %}https://via.placeholder.com/120{% endif %}"
-class="rounded-circle mb-3"
-width="120" height="120">
+                <!-- Basic Info -->
+                <h3 class="profile-name">@{{ user.username }}</h3>
+                <p class="profile-email">
+                    <i class="fa-regular fa-envelope me-2"></i>{{ user.email|default:"Email ko'rsatilmagan" }}
+                </p>
 
-<h4 class="fw-bold">{{ user.username }}</h4>
-<p class="text-muted">{{ user.email }}</p>
+                <!-- Role Badge -->
+                <div class="mb-4">
+                    {% if user.is_seller %}
+                        <span class="badge bg-success role-badge">
+                            <i class="fa-solid fa-shop me-1"></i> Sotuvchi (Seller)
+                        </span>
+                    {% else %}
+                        <span class="badge bg-primary role-badge">
+                            <i class="fa-solid fa-user me-1"></i> Xaridor (Buyer)
+                        </span>
+                    {% endif %}
+                </div>
 
-<p>
-<span class="badge bg-primary">
-{% if user.is_seller %}Seller{% else %}Buyer{% endif %}
-</span>
-</p>
+                <div class="divider mb-4" style="height: 1px; background: #eee;"></div>
 
-<a href="{% url 'profile_edit' %}" class="btn btn-main mt-3">
-Profilni tahrirlash
-</a>
+                <!-- Stats/Info Grid -->
+                <div class="info-grid">
+                    <div class="info-item text-center">
+                        <span class="info-label">Buyurtmalar</span>
+                        <span class="info-value">12 ta</span>
+                    </div>
+                    <div class="info-item text-center">
+                        <span class="info-label">Ro'yxatdan o'tgan</span>
+                        <span class="info-value">{{ user.date_joined|date:"d.m.Y" }}</span>
+                    </div>
+                </div>
 
-</div>
-</div>
+                <!-- Actions -->
+                <div class="d-grid gap-2">
+                    <a href="{% url 'profile_edit' %}" class="btn-edit">
+                        <i class="fa-solid fa-user-pen me-2"></i> Profilni tahrirlash
+                    </a>
+
+                    {% if user.is_seller %}
+                    <a href="#" class="btn btn-outline-primary fw-bold py-2 border-2 rounded-3 mt-2">
+                        <i class="fa-solid fa-plus me-1"></i> Yangi mahsulot qo'shish
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4">
+                    <a href="/" class="text-muted text-decoration-none small">
+                        <i class="fa-solid fa-arrow-left me-1"></i> Do'konga qaytish
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
